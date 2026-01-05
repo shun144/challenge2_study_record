@@ -78,7 +78,7 @@ const StudyRecord = () => {
 
   return (
     <>
-      <h1>学習記録一覧</h1>
+      <h1 style={{ color: "blue" }}>学習記録一覧</h1>
       <div style={{ textAlign: "left" }}>
         <div>
           <label htmlFor="study-content">学習内容</label>
