@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { getAllRecords } from "./utils/supabaseFuntion";
+import {
+  getAllRecords,
+  addDbRecord,
+  deleteDbRecord,
+} from "./utils/supabaseFuntion";
+import PrimaryButton from "./atoms/button/PrimaryButton";
+import RecordLi from "./molecules/record/RecordLi";
 
 const StudyRecord = () => {
   const [records, setRecords] = useState([]);
@@ -7,12 +13,15 @@ const StudyRecord = () => {
   const [studyTime, setStudyTime] = useState("");
   const [error, setError] = useState("");
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     (async () => {
       try {
         const res = await getAllRecords();
         if (res.status === 200) {
-          console.log(res.data);
+          setRecords(res.data);
+          setIsLoading(false);
         }
       } catch (err) {
         console.log(`%c ${err}`, "color:red");
@@ -32,7 +41,7 @@ const StudyRecord = () => {
     setStudyTime(val);
   };
 
-  const addRecord = () => {
+  const addRecord = async () => {
     if (studyTitle === "" || Number.isNaN(studyTime) || studyTime === "") {
       setError("入力されていない項目があります");
       return;
@@ -50,47 +59,61 @@ const StudyRecord = () => {
       time: studyTime,
     };
 
-    setRecords((prev) => [...prev, newRecord]);
+    const addedRecord = await addDbRecord(newRecord);
+    setRecords((prev) => [...prev, addedRecord]);
     setStudyTitle("");
     setStudyTime(0);
+  };
+
+  const handleRecodeDelete = async (deleteId) => {
+    await deleteDbRecord(deleteId);
+    setRecords((prev) => prev.filter(({ id }) => id !== deleteId));
   };
 
   const totalTime = records.reduce((acc, cur) => {
     return acc + parseInt(cur.time);
   }, 0);
 
+  if (isLoading) return <div>ローディング中</div>;
+
   return (
     <>
       <h1>学習記録一覧</h1>
-      <div>
-        <label htmlFor="study-content">学習内容</label>
-        <input
-          name="study-content"
-          type="text"
-          value={studyTitle}
-          onChange={handleChangeText}
-        />
+      <div style={{ textAlign: "left" }}>
+        <div>
+          <label htmlFor="study-content">学習内容</label>
+          <input
+            name="study-content"
+            type="text"
+            value={studyTitle}
+            onChange={handleChangeText}
+          />
+        </div>
+        <div>
+          <label htmlFor="study-time">学習時間</label>
+          <input
+            type="number"
+            min={0}
+            name="study-time"
+            value={studyTime}
+            onChange={handleChangeTime}
+          />
+        </div>
+        <div>{`入力されている学習内容：${studyTitle}`}</div>
+        <div>{`入力されている時間：${studyTime}時間`}</div>
+        <ul style={{ listStyle: "none", padding: "0", width: "250px" }}>
+          {records.map((record) => (
+            <RecordLi
+              key={record.id}
+              record={record}
+              onDelete={() => handleRecodeDelete(record.id)}
+            />
+          ))}
+        </ul>
+        <PrimaryButton onClick={addRecord}>登録</PrimaryButton>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        <p>{`合計時間：${totalTime} / 1000(h)`}</p>
       </div>
-      <div>
-        <label htmlFor="study-time">学習時間</label>
-        <input
-          type="number"
-          min={0}
-          name="study-time"
-          value={studyTime}
-          onChange={handleChangeTime}
-        />
-      </div>
-      <div>{`入力されている学習内容：${studyTitle}`}</div>
-      <div>{`入力されている時間：${studyTime}時間`}</div>
-      <ul className="record-list">
-        {records.map(({ title, time }) => (
-          <li key={title}>{`${title} ${time}時間`}</li>
-        ))}
-      </ul>
-      <button onClick={addRecord}>登録</button>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <p>{`合計時間：${totalTime} / 1000(h)`}</p>
     </>
   );
 };
