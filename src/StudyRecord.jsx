@@ -79,7 +79,15 @@ const StudyRecord = () => {
   return (
     <>
       <h1 style={{ color: "green" }}>学習記録一覧</h1>
-      <div style={{ textAlign: "center" }}>
+      <div
+        style={{
+          width: "450px",
+          margin: "0 auto",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "start",
+        }}
+      >
         <div>
           <label htmlFor="study-content">学習内容</label>
           <input
@@ -99,9 +107,9 @@ const StudyRecord = () => {
             onChange={handleChangeTime}
           />
         </div>
-        <div>{`入力されている学習内容：${studyTitle}`}</div>
-        <div>{`入力されている時間：${studyTime}時間`}</div>
-        <div style={{ margin: "15px auto", width: "250px" }}>
+        <div>{`入力されている学習内容： ${studyTitle}`}</div>
+        <div>{`入力されている時間： ${studyTime}時間`}</div>
+        <div style={{ margin: "15px 0", width: "200px" }}>
           <ul
             style={{
               listStyle: "none",
@@ -118,9 +126,11 @@ const StudyRecord = () => {
           </ul>
         </div>
 
-        <PrimaryButton onClick={addRecord}>登録</PrimaryButton>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <p>{`合計時間：${totalTime} / 1000(h)`}</p>
+        <div style={{ textAlign: "center", width: "100%" }}>
+          <PrimaryButton onClick={addRecord}>登録</PrimaryButton>
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          <p>{`合計時間：${totalTime} / 1000(h)`}</p>
+        </div>
       </div>
     </>
   );
