@@ -78,8 +78,8 @@ const StudyRecord = () => {
 
   return (
     <>
-      <h1 style={{ color: "blue" }}>学習記録一覧</h1>
-      <div style={{ textAlign: "left" }}>
+      <h1 style={{ color: "green" }}>学習記録一覧</h1>
+      <div style={{ textAlign: "center" }}>
         <div>
           <label htmlFor="study-content">学習内容</label>
           <input
@@ -101,15 +101,23 @@ const StudyRecord = () => {
         </div>
         <div>{`入力されている学習内容：${studyTitle}`}</div>
         <div>{`入力されている時間：${studyTime}時間`}</div>
-        <ul style={{ listStyle: "none", padding: "0", width: "250px" }}>
-          {records.map((record) => (
-            <RecordLi
-              key={record.id}
-              record={record}
-              onDelete={() => handleRecodeDelete(record.id)}
-            />
-          ))}
-        </ul>
+        <div style={{ margin: "15px auto", width: "250px" }}>
+          <ul
+            style={{
+              listStyle: "none",
+              padding: "0",
+            }}
+          >
+            {records.map((record) => (
+              <RecordLi
+                key={record.id}
+                record={record}
+                onDelete={() => handleRecodeDelete(record.id)}
+              />
+            ))}
+          </ul>
+        </div>
+
         <PrimaryButton onClick={addRecord}>登録</PrimaryButton>
         {error && <p style={{ color: "red" }}>{error}</p>}
         <p>{`合計時間：${totalTime} / 1000(h)`}</p>
