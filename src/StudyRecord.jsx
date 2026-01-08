@@ -19,6 +19,7 @@ const StudyRecord = () => {
     (async () => {
       try {
         const res = await getAllRecords();
+
         if (res.status === 200) {
           setRecords(res.data);
           setIsLoading(false);
@@ -91,7 +92,8 @@ const StudyRecord = () => {
         <div>
           <label htmlFor="study-content">学習内容</label>
           <input
-            name="study-content"
+            id="study-content"
+            aria-label="study-content"
             type="text"
             value={studyTitle}
             onChange={handleChangeText}
@@ -100,6 +102,8 @@ const StudyRecord = () => {
         <div>
           <label htmlFor="study-time">学習時間</label>
           <input
+            id="study-time"
+            aria-label="study-time"
             type="number"
             min={0}
             name="study-time"

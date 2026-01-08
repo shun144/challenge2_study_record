@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import "./App.css";
+import React from "react";
 import StudyRecord from "./StudyRecord";
+import "./App.css";
 
-function App() {
+const App = () => {
   return <StudyRecord />;
-}
+};
 
 export default App;
